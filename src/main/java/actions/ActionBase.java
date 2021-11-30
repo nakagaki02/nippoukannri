@@ -1,6 +1,7 @@
 package actions;
 
 import java.io.IOException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.PropertyConst;
+
 
 
 public abstract class ActionBase {
@@ -67,14 +69,13 @@ public abstract class ActionBase {
 
     protected void forward(ForwardConst target) throws ServletException, IOException {
 
-        //jspファイルの相対パスを作成
-
-        String forward = String.format("/WEB-INF/views/%s.jsp",target.getValue());
-
+      //jspファイルの相対パスを作成
+        String forward = String.format("/WEB-INF/views/%s.jsp", target.getValue());
         RequestDispatcher dispatcher = request.getRequestDispatcher(forward);
 
         //jspファイルの呼び出し
         dispatcher.forward(request, response);
+
     }
 
     protected void redirect(ForwardConst action, ForwardConst command)
@@ -162,6 +163,12 @@ public abstract class ActionBase {
 
         return request.getParameter(key.getValue());
     }
+
+    protected <V> void putRequestScope(AttributeConst key, V value) {
+        request.setAttribute(key.getValue(), value);
+
+    }
+
 
     @SuppressWarnings("unchecked")
     protected <R> R getSessionScope(AttributeConst key) {

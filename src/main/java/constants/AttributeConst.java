@@ -8,13 +8,11 @@ public enum AttributeConst {
 
     //一覧画面共通
 
-    MAX_ROW("maxRow"),
-    PAGE("page"),
+    MAX_ROW("maxRow"), PAGE("page"),
 
     //入力フォーム
 
-    TOKEN("_token"),
-    ERR("errors"),
+    TOKEN("_token"), ERR("errors"),
 
     //ログイン中の従業員
 
@@ -26,34 +24,21 @@ public enum AttributeConst {
 
     //従業員管理
 
-    EMPLOYEE("employee"),
-    EMPLOYEES("employees"),
-    EMP_COUNT("employee_count"),
-    EMP_ID("id"),
-    EMP_CODE("code"),
-    EMP_PASS("password"),
-    EMP_NAME("name"),
-    EMP_ADMIN_FLG("admin_flag"),
+    EMPLOYEE("employee"), EMPLOYEES("employees"), EMP_COUNT("employee_count"), EMP_ID("id"), EMP_CODE("code"), EMP_PASS(
+            "password"), EMP_NAME("name"), EMP_ADMIN_FLG("admin_flag"),
 
     //管理者フラグ
 
-    ROLE_ADMIN(1),
-    ROLE_GENERAL(0),
+    ROLE_ADMIN(1), ROLE_GENERAL(0),
 
     //削除フラグ
 
-    DEL_FLAG_TRUE(1),
-    DEL_FLAG_FALSE(0),
+    DEL_FLAG_TRUE(1), DEL_FLAG_FALSE(0),
 
     //日報管理
 
-    REPORT("report"),
-    REPORTS("reports"),
-    REP_COUNT("reports_count"),
-    REP_ID("id"),
-    REP_DATE("report_date"),
-    REP_TITLE("title"),
-    REP_CONTENT("content");
+    REPORT("report"), REPORTS("reports"), REP_COUNT("reports_count"), REP_ID("id"), REP_DATE("report_date"), REP_TITLE(
+            "title"), REP_CONTENT("content");
 
     private final String text;
     private final Integer i;
@@ -63,7 +48,7 @@ public enum AttributeConst {
         this.i = null;
     }
 
-    private AttributeConst(final Integer i){
+    private AttributeConst(final Integer i) {
         this.text = null;
         this.i = i;
     }
@@ -78,35 +63,3 @@ public enum AttributeConst {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

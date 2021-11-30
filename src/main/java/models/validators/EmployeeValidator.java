@@ -4,8 +4,6 @@ package models.validators;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.protobuf.Message;
-
 import actions.views.EmployeeView;
 import constants.MessageConst;
 import services.EmployeeService;
@@ -22,32 +20,28 @@ public class EmployeeValidator {
     //@returnエラーのリスト
 
     public static List<String> validate(
-            EmployeeService service, views.EmployeeView ev, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
+            EmployeeService service, EmployeeView ev, Boolean codeDuplicateCheckFlag, Boolean passwordCheckFlag) {
         List<String> errors = new ArrayList<String>();
 
         //社員番号のチェック
-
-        String codeError = validateName(ev.getName());
-        if(!codeError.equals("")) {
+        String codeError = validateCode(service, ev.getCode(), codeDuplicateCheckFlag);
+        if (!codeError.equals("")) {
             errors.add(codeError);
-}
+        }
 
         //氏名のチェック
-
         String nameError = validateName(ev.getName());
-        if(!nameError.equals("")) {
+        if (!nameError.equals("")) {
             errors.add(nameError);
         }
 
         //パスワードのチェック
-
         String passError = validatePassword(ev.getPassword(), passwordCheckFlag);
         if (!passError.equals("")) {
             errors.add(passError);
         }
 
         return errors;
-
     }
 
     //社員番号の入力チェックを行い、エラーメッセージを返却
@@ -56,28 +50,25 @@ public class EmployeeValidator {
     //@param codeDuplicateCheckFlag 社員番号の重複チェックを実施するかどうか(実施する:true 実施しない:false
     //@return エラーメッセージ
 
-    public static String validateCode(EmployeeService service,String code,Boolean codeDuplicateCheckFlag) {
+    private static String validateCode(EmployeeService service, String code, Boolean codeDuplicateCheckFlag) {
 
-        //入力値が無ければエラーメッセージを返却
-
-        if(code == null || codeDuplicateCheckFlag.equals("")) {
+        //入力値がなければエラーメッセージを返却
+        if (code == null || code.equals("")) {
             return MessageConst.E_NOEMP_CODE.getMessage();
         }
 
-        if(codeDuplicateCheckFlag) {
+        if (codeDuplicateCheckFlag) {
             //社員番号の重複チェックを実施
 
-            long employeeCount = isDuplicateEmployee(service,code);
+            long employeesCount = isDuplicateEmployee(service, code);
 
             //同一社員番号が既に登録されている場合はエラーメッセージを返却
-
-            if(employeeCount > 0) {
+            if (employeesCount > 0) {
                 return MessageConst.E_EMP_CODE_EXIST.getMessage();
             }
         }
 
         //エラーがない場合は空文字を返却
-
         return "";
     }
 
@@ -85,11 +76,13 @@ public class EmployeeValidator {
     //@param code社員番号
     //@return 従業員テーブルに登録されている同一社員番号のデータの件数
 
-    private static long isDuplicateEmployee(EmployeeService service,String code) {
+    private static long isDuplicateEmployee(EmployeeService service, String code) {
 
         long employeesCount = service.countByCode(code);
         return employeesCount;
     }
+
+
 
     //氏名に入力値があるかをチェックし、入力値がなけらばエラーメッセージを返却
     //@param name 氏名
@@ -110,18 +103,14 @@ public class EmployeeValidator {
     //@param passwordCheckFlag パスワードの入力チェックを実施するかどうか 実施：true 実施しない：false
     //return エラーメッセージ
 
-    private static String validatePassword(String password,Boolean passwordCheckFlag) {
+    private static String validatePassword(String password, Boolean passwordCheckFlag) {
 
-        //入力チェックを実施　かつ　入力値がなければエラーメッセージを返却
-
-        if(passwordCheckFlag && (password == null || password.equals(""))) {
+        //入力チェックを実施 かつ 入力値がなければエラーメッセージを返却
+        if (passwordCheckFlag && (password == null || password.equals(""))) {
             return MessageConst.E_NOPASSWORD.getMessage();
         }
 
         //エラーがない場合は空文字を返却
-
         return "";
     }
-
-
 }

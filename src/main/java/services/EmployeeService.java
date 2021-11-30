@@ -44,7 +44,7 @@ public class EmployeeService extends ServiceBase {
     //@param pepper pepper文字列
     //@return 取得でーたのインスタンス　取得できない場合null
 
-    public EmployeeView findOne(String code, String plainPass, Stringpepper) {
+    public EmployeeView findOne(String code, String plainPass, String pepper) {
         Employee e = null;
         try {
             //パスワードのハッシュ化
@@ -61,7 +61,7 @@ public class EmployeeService extends ServiceBase {
         }catch(NoResultException ex) {
         }
 
-        return views.EmployeeConverter.toView(e);
+        return EmployeeConverter.toView(e);
 
         }
 
@@ -71,7 +71,7 @@ public class EmployeeService extends ServiceBase {
 
     public EmployeeView findOne(int id) {
         Employee e = findOneInternal(id);
-        return views.EmployeeConverter.toView(e);
+        return EmployeeConverter.toView(e);
 
     }
 
@@ -127,13 +127,13 @@ public class EmployeeService extends ServiceBase {
     //@param pepper pepper文字列
     //@return バリデーションや更新処理中に発生したエラーのリスト
 
-    public List<String>update(views.EmployeeView ev,String pepper){
+    public List<String> update(EmployeeView ev, String pepper) {
 
         //idを条件に登録済みの従業員情報を取得する
-        views.EmployeeView savedEmp = findOne(ev.getId());
+        EmployeeView savedEmp = findOne(ev.getId());
 
-                boolean validateCode = false;
-        if(!savedEmp.getCode().equals(ev.getCode())) {
+        boolean validateCode = false;
+        if (!savedEmp.getCode().equals(ev.getCode())) {
 
             //社員番号を更新する場合
             //社員番号についてのバリデーションを行う
@@ -146,7 +146,7 @@ public class EmployeeService extends ServiceBase {
         }
 
         boolean validatePass = false;
-        if(ev.getPassword() !=null && !ev.getPassword().equals("")) {
+        if (ev.getPassword() != null && !ev.getPassword().equals("")) {
 
             //パスワードに入力がある場合
 
@@ -157,23 +157,22 @@ public class EmployeeService extends ServiceBase {
             //変更後のパスワードをハッシュ化し設定する
 
             savedEmp.setPassword(
-                    EncryptUtil.getPasswordEncrypt(ev.getPassword(),pepper));
+                    EncryptUtil.getPasswordEncrypt(ev.getPassword(), pepper));
         }
 
-        savedEmp.setName((ev.getName()); //変更後の氏名を設定する
+        savedEmp.setName((ev.getName())); //変更後の氏名を設定する
         savedEmp.setAdminFlag(ev.getAdminFlag()); //変更後の管理者フラグを設定する
 
-
-    //更新日時に現在時刻を設定する
+        //更新日時に現在時刻を設定する
         LocalDateTime today = LocalDateTime.now();
         savedEmp.setUpdatedAt(today);
 
         //更新内容についてバリデーションを行う
-        List<String> errors = EmployeeValidator.validate((this, savedEmp, validateCode, validatePass);
+        List<String> errors = EmployeeValidator.validate(this, savedEmp, validateCode, validatePass);
 
         //バリデーションエラーが無ければデータを更新する
 
-        if(errors.size() ==0) {
+        if (errors.size() == 0) {
             update(savedEmp);
         }
         //エラーを返却（エラーが無ければ０件の空リスト
@@ -187,7 +186,7 @@ public class EmployeeService extends ServiceBase {
     public void destroy(Integer id) {
 
         //idを条件に登録済みの従業員情報を取得する
-        views.EmployeeView savedEmp = findOne(id);
+        EmployeeView savedEmp = findOne(id);
 
         //更新日時に現在時刻を設定する
         LocalDateTime today = LocalDateTime.now();
@@ -209,18 +208,15 @@ public class EmployeeService extends ServiceBase {
 
     public Boolean validateLogin(String code, String plainPass, String pepper) {
 
-        boolean isValodEmployee = false;
-        if (code != null && !code.equals("") && plainPass.equals("")) {
-            views.EmployeeView ev = findOne(code, plainPass, pepper);
+        boolean isValidEmployee = false;
+        if (code != null && !code.equals("") && plainPass != null && !plainPass.equals("")) {
+            EmployeeView ev = findOne(code, plainPass, pepper);
 
             if (ev != null && ev.getId() != null) {
 
-                //データが取得出来た場合、認証成功
-
+                //データが取得できた場合、認証成功
                 isValidEmployee = true;
-
             }
-
         }
 
         //認証結果を返却する
@@ -247,7 +243,7 @@ public class EmployeeService extends ServiceBase {
     private void create(EmployeeView ev) {
 
         em.getTransaction().begin();
-        em.persist(views.EmployeeConverter.toModel(ev));
+        em.persist(EmployeeConverter.toModel(ev));
         em.getTransaction().commit();
 
     }
@@ -255,17 +251,12 @@ public class EmployeeService extends ServiceBase {
     //従業員データを更新する
     //@param ev 画面から入力された従業員の登録内容
 
-    private void update(views.EmployeeView ev) {
+    private void update(EmployeeView ev) {
 
         em.getTransaction().begin();
         Employee e = findOneInternal(ev.getId());
-        views.EmployeeConverter.copyViewToModel(e, ev);
+        EmployeeConverter.copyViewToModel(e, ev);
         em.getTransaction().commit();
 
     }
-
-   }
   }
-}
-
-}

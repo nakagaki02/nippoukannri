@@ -8,8 +8,7 @@ public interface JpaConst {
 
     //データ取得件数の最大値
 
-    int
-     ROW_PER_PAGE =15; //1ページに表示するレコードの数
+    int ROW_PER_PAGE =15; //1ページに表示するレコードの数
 
 
     //従業員テーブル
