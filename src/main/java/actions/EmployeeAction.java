@@ -213,6 +213,25 @@ public class EmployeeAction extends ActionBase {
             //一覧画面にリダイレクト
             redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_INDEX);
         }
+
     }
+    private boolean checkAdmin() throws ServletException, IOException {
+
+        //セッションからログイン中の従業員情報を取得
+        EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+
+        //管理者でなければエラー画面を表示
+        if (ev.getAdminFlag() != AttributeConst.ROLE_ADMIN.getIntegerValue()) {
+
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+            return false;
+
+        } else {
+
+            return true;
+        }
+
+    }
+
 
 }
